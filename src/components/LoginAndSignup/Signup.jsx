@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
@@ -7,19 +7,22 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
 import { Input } from "../ui/input";
-import { Import } from "lucide-react";
-import { postData } from "../utils/fetch-api-data";
 
 function Signup() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const email = formData.get("email");
+    const password = formData.get("password");
+    const confirmPassword = formData.get("confirm-password");
+    const username = formData.get("username");
 
     if (password !== confirmPassword) {
       toast.error("Passwords do not match. Please try again.");
@@ -28,7 +31,7 @@ function Signup() {
 
     try {
       const response = await axios.post("https://your-api-url.com/signup", {
-        username, // Include username in the request
+        username,
         email,
         password,
       });
@@ -43,15 +46,25 @@ function Signup() {
   };
 
   return (
-    <div className="bg-background h-screen flex items-center justify-center p-4 ">
-      <div className="w-full lg:w-1/4 mx-auto">
-        <Card>
+    <div className="bg-background h-screen flex items-center justify-center p-4">
+      <div className="w-full lg:w-1/4 mx-auto ">
+        <Card className="rounded-3xl">
           <CardHeader>
-            <CardTitle>Login In</CardTitle>
-            <CardDescription>Enter email and password</CardDescription>
+            <CardTitle>Sign Up</CardTitle>
+            <CardDescription>
+              Enter your details to create an account
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <form action="" onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-1">
+                <p>Username</p>
+                <Input
+                  placeholder="Your Username"
+                  id="username"
+                  name="username"
+                />
+              </div>
               <div className="space-y-1">
                 <p>Email</p>
                 <Input
@@ -67,13 +80,34 @@ function Signup() {
                   type="password"
                   id="password"
                   name="password"
+                  autoComplete="new-password"
                 />
               </div>
-              <Button type="submit" className="w-full">
-                Login
+              <div className="space-y-1">
+                <p>Confirm Password</p>
+                <Input
+                  placeholder="*********"
+                  type="password"
+                  id="confirm-password"
+                  name="confirm-password"
+                />
+              </div>
+              <Button type="submit" className="w-full rounded-3xl">
+                Sign Up
               </Button>
             </form>
           </CardContent>
+          <div className="flex items-center justify-center pb-8">
+            <p className="mr-2">Already having an account?</p>
+            <button
+              className="text-white-500 font-bold hover:underline"
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              Login
+            </button>
+          </div>
         </Card>
       </div>
     </div>

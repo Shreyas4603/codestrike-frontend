@@ -44,9 +44,9 @@ function Login() {
   return (
     <div className="bg-background h-screen flex items-center justify-center p-4 ">
       <div className="w-full lg:w-1/4 mx-auto">
-        <Card>
+        <Card className="rounded-3xl">
           <CardHeader>
-            <CardTitle>Login In</CardTitle>
+            <CardTitle>Login</CardTitle>
             <CardDescription>Enter email and password</CardDescription>
           </CardHeader>
           <CardContent>
@@ -66,13 +66,25 @@ function Login() {
                   type="password"
                   id="password"
                   name="password"
+                  autoComplete="new-password"
                 />
               </div>
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full rounded-3xl">
                 Login
               </Button>
             </form>
           </CardContent>
+          <div className="flex items-center justify-center pb-8">
+            <p className="mr-2">Create an account?</p>
+            <button
+              className="text-white-600 font-bold hover:underline"
+              onClick={() => {
+                navigate("/signup");
+              }}
+            >
+              Signup
+            </button>
+          </div>
         </Card>
       </div>
     </div>
