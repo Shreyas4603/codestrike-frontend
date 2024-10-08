@@ -1,133 +1,112 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "../ui/button";
-import axios from "axios";
-import { Toaster, toast } from "sonner";
+import {toast } from "sonner";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Input } from "../ui/input";
+import { postData } from "../utils/fetch-api-data";
 
 function Signup() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState(""); // Username state
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // Confirm password state
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const formData = new FormData(e.target);
+
+    const email = formData.get("email");
+    const username = formData.get("username");
+    const password = formData.get("password");
+    const confirmPassword = formData.get("confirmPassword");
+
+    // Check if passwords match
     if (password !== confirmPassword) {
       toast.error("Passwords do not match. Please try again.");
       return;
     }
 
-    try {
-      const response = await axios.post("https://your-api-url.com/signup", {
-        username, // Include username in the request
-        email,
-        password,
-      });
+    // Prepare data for backend, excluding confirmPassword
+    const data = {
+      email,
+      username,
+      password,
+    };
 
-      if (response.status === 200) {
-        toast.success("Account created successfully!");
+    try {
+      const response = await postData("/users/register", data);
+      console.log(response.response);
+      if (response.response.status === 201) {
+        toast.success("Signed up successfully!");
         navigate("/login");
       }
     } catch (error) {
-      toast.error("Failed to create account. Please try again.");
+      toast.error("Failed to sign up. Please try again.");
     }
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-black">
-      <div className="relative bg-black border border-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4 w-96 z-10 rounded-e-3xl rounded-s-3xl">
-        <h2 className="text-3xl font-extrabold text-center text-white mb-6">
-          Create an Account
-        </h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label
-              className="block text-white text-sm font-medium mb-1"
-              htmlFor="username"
-            >
-              Username
-            </label>
-            <input
-              type="text"
-              id="username"
-              placeholder="YourUsername"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="border border-white rounded-md w-full py-3 px-4 text-white leading-tight bg-transparent focus:outline-none focus:ring focus:ring-white focus:border-white transition duration-200"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-white text-sm font-medium mb-1"
-              htmlFor="email"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              placeholder="youremail@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="border border-white rounded-md w-full py-3 px-4 text-white leading-tight bg-transparent focus:outline-none focus:ring focus:ring-white focus:border-white transition duration-200"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-white text-sm font-medium mb-1"
-              htmlFor="password"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="border border-white rounded-md w-full py-3 px-4 text-white leading-tight bg-transparent focus:outline-none focus:ring focus:ring-white focus:border-white transition duration-200"
-              autoComplete="new-password"
-              required
-            />
-          </div>
-          <div className="mb-6">
-            <label
-              className="block text-white text-sm font-medium mb-1"
-              htmlFor="confirmPassword"
-            >
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              placeholder="••••••••"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="border border-white rounded-md w-full py-3 px-4 text-white leading-tight bg-transparent focus:outline-none focus:ring focus:ring-white focus:border-white transition duration-200"
-              autoComplete="new-password"
-              required
-            />
-          </div>
-          <Button
-            type="submit"
-            className="w-full bg-white text-black font-bold py-2 px-4 rounded-md hover:bg-gray-200 transition duration-200"
-          >
-            Sign Up
-          </Button>
-        </form>
-        <div className="text-center mt-4">
-          <span className="text-white">Already have an account? </span>
-          <button
-            className="text-white hover:underline font-extrabold"
-            onClick={() => navigate("/login")}
-          >
-            Log in
-          </button>
-        </div>
+    <div className="bg-background h-screen flex items-center justify-center p-4 ">
+      <div className="w-full lg:w-1/4 mx-auto">
+        <Card>
+          <CardHeader>
+            <CardTitle>Sign Up</CardTitle>
+            <CardDescription>Enter email and password</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form action="" onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-1">
+                <p>Email</p>
+                <Input
+                  placeholder="youremail@example.com"
+                  id="email"
+                  name="email"
+                />
+              </div>
+              <div className="space-y-1">
+                <p>Username</p>
+                <Input
+                  placeholder="give a unique username"
+                  id="username"
+                  name="username"
+                />
+              </div>
+              <div className="space-y-1">
+                <p>Password</p>
+                <Input
+                  placeholder="Enter your password here ..."
+                  type="password"
+                  id="password"
+                  name="password"
+                />
+              </div>
+              <div className="space-y-1">
+                <p>Confirm Password</p>
+                <Input
+                  placeholder="Confirm your password here ..."
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                />
+              </div>
+              <Button type="submit" className="w-full">
+                Sign Up
+              </Button>
+            </form>
+          </CardContent>
+          <CardFooter className="flex justify-between items-center">
+            <p className="text-sm text-muted-foreground">Already have an account?</p>
+            <Button variant="link" asChild>
+              <Link to="/login">Login</Link>
+            </Button>
+          </CardFooter> 
+        </Card>
       </div>
     </div>
   );
