@@ -10,7 +10,10 @@ export default {
     			sm: 'calc(var(--radius) - 4px)'
     		},
     		colors: {
-    			background: 'hsl(var(--background))',
+    			background: {
+    				DEFAULT: 'hsl(var(--background))',
+    				dark: 'hsl(215, 28%, 17%)'  // New dark slate gray color
+    			},
     			foreground: 'hsl(var(--foreground))',
     			card: {
     				DEFAULT: 'hsl(var(--card))',
