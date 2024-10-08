@@ -3,21 +3,35 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Input } from "../ui/input";
+import { Import } from "lucide-react";
+import { postData } from "../utils/fetch-api-data";
 
 function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
+    const formData = new FormData(e.target); // Create FormData from the form element
+    
+    // Convert FormData to an object for axios
+    const data = {
+      email: formData.get('email'), // Replace 'email' with your input name attribute
+      password: formData.get('password'), // Replace 'password' with your input name attribute
+    };
+  
     try {
-      const response = await axios.post("https://your-api-url.com/login", {
-        email,
-        password,
-      });
-
+      const response = await postData("users/login", data);
+      console.log(response)
       if (response.status === 200) {
         toast.success("Logged in successfully!");
         navigate("/dashboard");
@@ -26,65 +40,30 @@ function Login() {
       toast.error("Failed to log in. Please check your credentials.");
     }
   };
+  
 
   return (
-    <div className="flex items-center justify-center h-screen bg-black">
-      <div className="relative bg-black border border-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4 w-96 z-10 rounded-e-3xl rounded-s-3xl">
-        <h2 className="text-3xl font-extrabold text-center text-white mb-6">
-          Welcome Back!
-        </h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label
-              className="block text-white text-sm font-medium mb-1"
-              htmlFor="email"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              placeholder="youremail@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="border border-white rounded-md w-full py-3 px-4 text-white leading-tight bg-transparent focus:outline-none focus:ring focus:ring-white focus:border-white transition duration-200"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-white text-sm font-medium mb-1"
-              htmlFor="password"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="border border-white rounded-md w-full py-3 px-4 text-white leading-tight bg-transparent focus:outline-none focus:ring focus:ring-white focus:border-white transition duration-200"
-              autoComplete="new-password"
-              required
-            />
-          </div>
-          <Button
-            type="submit"
-            className="w-full bg-white text-black font-bold py-2 px-4 rounded-md hover:bg-gray-200 transition duration-200"
-          >
-            Log in
-          </Button>
-        </form>
-        <div className="text-center mt-4">
-          <span className="text-white">Don't have an account? </span>
-          <button
-            className="text-white hover:underline font-extrabold"
-            onClick={() => navigate("/signup")}
-          >
-            Sign up
-          </button>
-        </div>
+    <div className="bg-background h-screen flex items-center justify-center p-4 ">
+      <div className="w-full lg:w-1/4 mx-auto">
+        <Card>
+          <CardHeader>
+            <CardTitle>Sign In</CardTitle>
+            <CardDescription>Enter email and password</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form action="" onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-1">
+                <p>Email</p>
+                <Input placeholder="youremail@example.com" id="email" name="email"/>
+              </div>
+              <div className="space-y-1">
+                <p>Password</p>
+                <Input placeholder="*********" type="password" id="password" name="password"/>
+              </div>
+              <Button type="submit" className='w-full'>Login</Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
