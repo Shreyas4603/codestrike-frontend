@@ -20,18 +20,18 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const formData = new FormData(e.target); // Create FormData from the form element
-    
+
     // Convert FormData to an object for axios
     const data = {
-      email: formData.get('email'), // Replace 'email' with your input name attribute
-      password: formData.get('password'), // Replace 'password' with your input name attribute
+      email: formData.get("email"), // Replace 'email' with your input name attribute
+      password: formData.get("password"), // Replace 'password' with your input name attribute
     };
-  
+
     try {
       const response = await postData("users/login", data);
-      console.log(response)
+      console.log(response);
       if (response.status === 200) {
         toast.success("Logged in successfully!");
         navigate("/dashboard");
@@ -40,27 +40,37 @@ function Login() {
       toast.error("Failed to log in. Please check your credentials.");
     }
   };
-  
 
   return (
     <div className="bg-background h-screen flex items-center justify-center p-4 ">
       <div className="w-full lg:w-1/4 mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle>Sign In</CardTitle>
+            <CardTitle>Login In</CardTitle>
             <CardDescription>Enter email and password</CardDescription>
           </CardHeader>
           <CardContent>
             <form action="" onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1">
                 <p>Email</p>
-                <Input placeholder="youremail@example.com" id="email" name="email"/>
+                <Input
+                  placeholder="youremail@example.com"
+                  id="email"
+                  name="email"
+                />
               </div>
               <div className="space-y-1">
                 <p>Password</p>
-                <Input placeholder="*********" type="password" id="password" name="password"/>
+                <Input
+                  placeholder="*********"
+                  type="password"
+                  id="password"
+                  name="password"
+                />
               </div>
-              <Button type="submit" className='w-full'>Login</Button>
+              <Button type="submit" className="w-full">
+                Login
+              </Button>
             </form>
           </CardContent>
         </Card>
