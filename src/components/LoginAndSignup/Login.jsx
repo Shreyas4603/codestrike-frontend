@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "../ui/button";
-import axios from "axios";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 import {
   Card,
   CardContent,
@@ -12,9 +11,8 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Input } from "../ui/input";
-import { Import } from "lucide-react";
 import { postData } from "../utils/fetch-api-data";
-
+import Cookies from "js-cookie";
 function Login() {
   const navigate = useNavigate();
 
@@ -30,12 +28,13 @@ function Login() {
     };
 
     try {
-      const response = await postData("users/login", data);
-      console.log(response);
-      if (response.status === 200) {
-        toast.success("Logged in successfully!");
-        navigate("/dashboard");
-      }
+      const response = await postData("/users/login", data);
+      console.log(response.response.data);
+      if (response.response.status === 200) {
+			toast.success("Logged in successfully!");
+      Cookies.set("token", response.response.data.token);
+			navigate("/");
+		}
     } catch (error) {
       toast.error("Failed to log in. Please check your credentials.");
     }

@@ -1,8 +1,7 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "../ui/button";
-import axios from "axios";
-import { Toaster, toast } from "sonner";
+import {toast } from "sonner";
 import {
   Card,
   CardContent,
@@ -11,6 +10,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Input } from "../ui/input";
+import { postData } from "../utils/fetch-api-data";
 
 function Signup() {
   const navigate = useNavigate();
@@ -24,24 +24,35 @@ function Signup() {
     const confirmPassword = formData.get("confirm-password");
     const username = formData.get("username");
 
+    const formData = new FormData(e.target);
+
+    const email = formData.get("email");
+    const username = formData.get("username");
+    const password = formData.get("password");
+    const confirmPassword = formData.get("confirmPassword");
+
+    // Check if passwords match
     if (password !== confirmPassword) {
       toast.error("Passwords do not match. Please try again.");
       return;
     }
 
-    try {
-      const response = await axios.post("https://your-api-url.com/signup", {
-        username,
-        email,
-        password,
-      });
+    // Prepare data for backend, excluding confirmPassword
+    const data = {
+      email,
+      username,
+      password,
+    };
 
-      if (response.status === 200) {
-        toast.success("Account created successfully!");
+    try {
+      const response = await postData("/users/register", data);
+      console.log(response.response);
+      if (response.response.status === 201) {
+        toast.success("Signed up successfully!");
         navigate("/login");
       }
     } catch (error) {
-      toast.error("Failed to create account. Please try again.");
+      toast.error("Failed to sign up. Please try again.");
     }
   };
 
@@ -74,9 +85,17 @@ function Signup() {
                 />
               </div>
               <div className="space-y-1">
+                <p>Username</p>
+                <Input
+                  placeholder="give a unique username"
+                  id="username"
+                  name="username"
+                />
+              </div>
+              <div className="space-y-1">
                 <p>Password</p>
                 <Input
-                  placeholder="*********"
+                  placeholder="Enter your password here ..."
                   type="password"
                   id="password"
                   name="password"
@@ -92,7 +111,16 @@ function Signup() {
                   name="confirm-password"
                 />
               </div>
-              <Button type="submit" className="w-full rounded-3xl">
+              <div className="space-y-1">
+                <p>Confirm Password</p>
+                <Input
+                  placeholder="Confirm your password here ..."
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                />
+              </div>
+              <Button type="submit" className="w-full">
                 Sign Up
               </Button>
             </form>
