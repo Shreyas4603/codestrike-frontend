@@ -41,46 +41,52 @@ function Login() {
   };
 
   return (
-		<div className="bg-background h-screen flex items-center justify-center p-4 ">
-			<div className="w-full lg:w-1/4 mx-auto">
-				<Card>
-					<CardHeader>
-						<CardTitle>Login</CardTitle>
-						<CardDescription>Enter email and password</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<form action="" onSubmit={handleSubmit} className="space-y-4">
-							<div className="space-y-1">
-								<p>Email</p>
-								<Input
-									placeholder="youremail@example.com"
-									id="email"
-									name="email"
-								/>
-							</div>
-							<div className="space-y-1">
-								<p>Password</p>
-								<Input
-									placeholder="*********"
-									type="password"
-									id="password"
-									name="password"
-								/>
-							</div>
-							<Button type="submit" className="w-full">
-								Login
-							</Button>
-						</form>
-					</CardContent>
-					<CardFooter className="flex justify-between items-center">
-						<p className="text-sm text-muted-foreground">Don't have an account?</p>
-						<Button variant="link" asChild>
-							<Link to="/signup">Sign Up</Link>
-						</Button>
-					</CardFooter>
-				</Card>
-			</div>
-		</div>
+    <div className="bg-background h-screen flex items-center justify-center p-4 ">
+      <div className="w-full lg:w-1/4 mx-auto">
+        <Card className="rounded-3xl">
+          <CardHeader>
+            <CardTitle>Login</CardTitle>
+            <CardDescription>Enter email and password</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form action="" onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-1">
+                <p>Email</p>
+                <Input
+                  placeholder="youremail@example.com"
+                  id="email"
+                  name="email"
+                />
+              </div>
+              <div className="space-y-1">
+                <p>Password</p>
+                <Input
+                  placeholder="*********"
+                  type="password"
+                  id="password"
+                  name="password"
+                  autoComplete="new-password"
+                />
+              </div>
+              <Button type="submit" className="w-full rounded-3xl">
+                Login
+              </Button>
+            </form>
+          </CardContent>
+          <div className="flex items-center justify-center pb-8">
+            <p className="mr-2">Create an account?</p>
+            <button
+              className="text-white-600 font-bold hover:underline"
+              onClick={() => {
+                navigate("/signup");
+              }}
+            >
+              Signup
+            </button>
+          </div>
+        </Card>
+      </div>
+    </div>
   );
 }
 
