@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import {toast } from "sonner";
@@ -6,14 +6,22 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
 import { Input } from "../ui/input";
 import { postData } from "../utils/fetch-api-data";
+import Cookies from "js-cookie";
 
 function Signup() {
   const navigate = useNavigate();
+  const jwt = Cookies.get("token");
+  useEffect(() => {
+		if (jwt) {
+			navigate("/");
+		}
+  }, [jwt, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -99,15 +107,17 @@ function Signup() {
 						</form>
 					</CardContent>
 					<div className="flex items-center justify-center pb-8">
-						<p className="mr-2">Already having an account?</p>
-						<button
-							className="text-white-500 font-bold hover:underline"
-							onClick={() => {
-								navigate("/login");
-							}}
-						>
-							Login
-						</button>
+						<CardFooter>
+							<p className="mr-2">Already having an account?</p>
+							<button
+								className="text-white-500 font-bold hover:underline"
+								onClick={() => {
+									navigate("/login");
+								}}
+							>
+								Login
+							</button>
+						</CardFooter>
 					</div>
 				</Card>
 			</div>
