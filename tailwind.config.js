@@ -1,3 +1,5 @@
+import tailwindcssAnimate from "tailwindcss-animate";
+
 /** @type {import('tailwindcss').Config} */
 export default {
     darkMode: ["class"],
@@ -10,10 +12,7 @@ export default {
     			sm: 'calc(var(--radius) - 4px)'
     		},
     		colors: {
-    			background: {
-    				DEFAULT: 'hsl(var(--background))',
-    				dark: 'hsl(215, 28%, 17%)'  // New dark slate gray color
-    			},
+    			background: 'hsl(var(--background))',
     			foreground: 'hsl(var(--foreground))',
     			card: {
     				DEFAULT: 'hsl(var(--card))',
@@ -56,6 +55,5 @@ export default {
     		}
     	}
     },
-	plugins: [require("tailwindcss-animate")],
+    plugins: [tailwindcssAnimate],
 };
-
