@@ -10,7 +10,7 @@ function App() {
 
   return (
     <Router>
-      <div className="absolute bottom-5 right-5">
+      <div className="absolute top-5 left-5">
         <ModeToggle />
       </div>
       <Navigation />

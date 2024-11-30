@@ -61,7 +61,7 @@ const Login = ({handleLogin}) => {
 							<div className="space-y-1">
 								<p>Email</p>
 								<Input
-									placeholder="youremail@example.com"
+									placeholder="e.g:youremail@example.com"
 									id="email"
 									name="email"
 								/>
@@ -69,7 +69,7 @@ const Login = ({handleLogin}) => {
 							<div className="space-y-1">
 								<p>Password</p>
 								<Input
-									placeholder="*********"
+									placeholder="e.g:#98fyi@20$4"
 									type="password"
 									id="password"
 									name="password"
