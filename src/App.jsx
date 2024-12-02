@@ -1,25 +1,48 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./components/LoginAndSignup/Login";
-import Signup from "./components/LoginAndSignup/Signup";
-import Navbar from "./components/Navbar";
+import React, { useState, useEffect } from "react";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+} from "react-router-dom";
+import Cookies from "js-cookie";
 import { ModeToggle } from "./components/mode-toggle";
-import HomePage from "./components/LoginAndSignup/HomePage";
+import Navigation from "./components/Navigation";
+
+import Login from "./components/Authentication/Login";
+import { PrivateRoutes } from "./components/utils/PrivateRoutes";
+import { PublicRoutes } from "./components/utils/PublicRoutes";
+import HomePage from "./components/pages/HomePage";
+import Signup from "./components/Authentication/Signup";
+import NotFound from "./components/pages/NotFound";
 
 function App() {
   return (
-    <Router>
-      <div className="absolute  bottom-5 right-5">
-        {" "}
+    <BrowserRouter>
+      <div className="absolute top-5 left-5">
         <ModeToggle />
       </div>
-      {/* <Navbar /> */}
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+
+        <Route path="/" element={<PublicRoutes />}>
+          <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Route>
+
+        <Route path="/" element={<PrivateRoutes />}>
+          <Route path="/home" element={<HomePage />} />
+        </Route>
+
+        <Route path="*" element={<NotFound/>}/>
+        
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 
 export default App;
+{
+  /* 
+{/* <Navigation /> */
+}
+
+// </Router> */} */}

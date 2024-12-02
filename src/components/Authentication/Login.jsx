@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
@@ -13,7 +13,8 @@ import {
 import { Input } from "../ui/input";
 import { postData } from "../utils/fetch-api-data";
 import Cookies from "js-cookie";
-function Login() {
+import axios from "axios";
+const Login = ({ handleLogin }) => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -28,15 +29,19 @@ function Login() {
     };
 
     try {
-      const response = await postData("/users/login", data);
-      console.log(response.response.data);
-      if (response.response.status === 200) {
-			toast.success("Logged in successfully!");
-      Cookies.set("token", response.response.data.token);
-			navigate("/");
-		}
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/login`, data);
+      console.log(response);
+      if (response.status === 200) {
+        toast.success(response.data.data);
+        Cookies.set("token", response.data.token);
+		navigate('/home')
+      }
     } catch (error) {
-      toast.error("Failed to log in. Please check your credentials.");
+      console.log(error);
+
+      toast.error(
+        "Failed to log in. Please check your credentials. 121216546564"
+      );
     }
   };
 
@@ -53,7 +58,7 @@ function Login() {
               <div className="space-y-1">
                 <p>Email</p>
                 <Input
-                  placeholder="youremail@example.com"
+                  placeholder="e.g:youremail@example.com"
                   id="email"
                   name="email"
                 />
@@ -61,7 +66,7 @@ function Login() {
               <div className="space-y-1">
                 <p>Password</p>
                 <Input
-                  placeholder="*********"
+                  placeholder="*****************"
                   type="password"
                   id="password"
                   name="password"
@@ -74,20 +79,22 @@ function Login() {
             </form>
           </CardContent>
           <div className="flex items-center justify-center pb-8">
-            <p className="mr-2">Create an account?</p>
-            <button
-              className="text-white-600 font-bold hover:underline"
-              onClick={() => {
-                navigate("/signup");
-              }}
-            >
-              Signup
-            </button>
+            <CardFooter>
+              <p className="mr-2">Create an account?</p>
+              <button
+                className="text-white-600 font-bold hover:underline"
+                onClick={() => {
+                  navigate("/signup");
+                }}
+              >
+                Signup
+              </button>
+            </CardFooter>
           </div>
         </Card>
       </div>
     </div>
   );
-}
+};
 
 export default Login;
