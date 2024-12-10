@@ -36,6 +36,7 @@ const Login = () => {
         toast.success(response.data.data);
         Cookies.set("token", response.data.token);
         localStorage.setItem("username:", response.data.username)
+        localStorage.setItem("_id:", response.data._id)
 		    navigate('/home')
       }
     } catch (error) {
