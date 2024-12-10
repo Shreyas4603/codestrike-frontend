@@ -20,6 +20,7 @@ const HomePage = () => {
 
 	const handleLogout = () => {
 		Cookies.remove("token", { path: "/" });
+		localStorage.removeItem("_id:")
 		toast.success("Logged out successfully!");
 		navigate("/");
 	};
@@ -43,6 +44,7 @@ const HomePage = () => {
 					},
 				}
 			);
+			console.log(response)
 			setMatchResponse(response.data);
 			toast.success("Match started successfully!");
 		} catch (error) {

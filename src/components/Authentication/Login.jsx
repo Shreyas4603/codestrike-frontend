@@ -14,7 +14,7 @@ import { Input } from "../ui/input";
 import { postData } from "../utils/fetch-api-data";
 import Cookies from "js-cookie";
 import axios from "axios";
-const Login = ({ handleLogin }) => {
+const Login = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -32,9 +32,11 @@ const Login = ({ handleLogin }) => {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/login`, data);
       console.log(response);
       if (response.status === 200) {
+        console.log(response)
         toast.success(response.data.data);
         Cookies.set("token", response.data.token);
-		navigate('/home')
+        localStorage.setItem("_id:", response.data.username)
+		    navigate('/home')
       }
     } catch (error) {
       console.log(error);

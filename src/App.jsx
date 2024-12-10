@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   BrowserRouter,
   Route,
@@ -6,7 +6,6 @@ import {
 } from "react-router-dom";
 import Cookies from "js-cookie";
 import { ModeToggle } from "./components/mode-toggle";
-import Navigation from "./components/Navigation";
 
 import Login from "./components/Authentication/Login";
 import { PrivateRoutes } from "./components/utils/PrivateRoutes";
