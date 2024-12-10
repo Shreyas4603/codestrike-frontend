@@ -14,6 +14,7 @@ import HomePage from "./components/pages/HomePage";
 import Signup from "./components/Authentication/Signup";
 import NotFound from "./components/pages/NotFound";
 import Profile from "./components/pages/Profile";
+import BattleField from "./components/pages/BattleField";
 
 function App() {
   return (
