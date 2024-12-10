@@ -9,7 +9,7 @@ import LoadingScreen from "../LoadingScreen";
 const HomePage = () => {
 	const [localDateTime, setLocalDateTime] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
-	const [matchResponse, setMatchResponse] = useState(null);
+	// const [matchResponse, setMatchResponse] = useState(null);
 	const navigate = useNavigate();
 	const token = Cookies.get("token");
 
@@ -20,6 +20,7 @@ const HomePage = () => {
 
 	const handleLogout = () => {
 		Cookies.remove("token", { path: "/" });
+		localStorage.removeItem("username:")
 		localStorage.removeItem("_id:")
 		toast.success("Logged out successfully!");
 		navigate("/");
@@ -44,9 +45,13 @@ const HomePage = () => {
 					},
 				}
 			);
-			console.log(response)
-			setMatchResponse(response.data);
+			// console.log(response)
+			// setMatchResponse(response.data);
+			sessionStorage.setItem("matchID: ",response.data)
+			// const matchID = sessionStorage.getItem("matchID: ");
+			// console.log(matchID)
 			toast.success("Match started successfully!");
+			navigate(`/match/${sessionStorage.getItem("matchID: ")}`);
 		} catch (error) {
 			console.error("Error starting match:", error);
 			toast.error("Failed to start match. Please try again.");
@@ -54,6 +59,9 @@ const HomePage = () => {
 			setIsLoading(false);
 		}
 	};
+
+	const matchID = sessionStorage.getItem("matchID: ");
+
 
 	return (
 		<div className="min-h-screen flex items-center justify-center">
@@ -85,6 +93,13 @@ const HomePage = () => {
 									<LoadingScreen />
 								</div>
 							</div>
+						) : matchID ? (
+							<button
+								onClick={() => navigate(`/match/${matchID}`)}
+								className="w-full px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition-colors"
+							>
+								Continue Match
+							</button>
 						) : (
 							<button
 								onClick={handleStartMatch}
@@ -95,14 +110,14 @@ const HomePage = () => {
 						)}
 					</div>
 
-					{matchResponse && (
+					{/* {matchResponse && (
 						<div className="mt-4 p-4 border rounded-md">
 							<h2 className="text-lg font-semibold mb-2">Match Status:</h2>
 							<pre className="whitespace-pre-wrap text-sm">
 								{JSON.stringify(matchResponse, null, 2)}
 							</pre>
 						</div>
-					)}
+					)} */}
 				</div>
 			</div>
 		</div>

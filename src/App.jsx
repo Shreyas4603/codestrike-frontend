@@ -13,6 +13,7 @@ import { PublicRoutes } from "./components/utils/PublicRoutes";
 import HomePage from "./components/pages/HomePage";
 import Signup from "./components/Authentication/Signup";
 import NotFound from "./components/pages/NotFound";
+import BattleField from "./components/pages/BattleField";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
 
         <Route path="/" element={<PrivateRoutes />}>
           <Route path="/home" element={<HomePage />} />
+          <Route path="/match/:matchID" element={<BattleField />} />
         </Route>
 
         <Route path="*" element={<NotFound/>}/>
