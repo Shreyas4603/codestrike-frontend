@@ -30,7 +30,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/login`, data);
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         console.log(response)
         toast.success(response.data.data);
@@ -39,7 +39,7 @@ const Login = () => {
 		    navigate('/home')
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
 
       toast.error(
         "Failed to log in. Please check your credentials. 121216546564"
