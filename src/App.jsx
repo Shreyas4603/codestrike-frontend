@@ -13,11 +13,12 @@ import { PublicRoutes } from "./components/utils/PublicRoutes";
 import HomePage from "./components/pages/HomePage";
 import Signup from "./components/Authentication/Signup";
 import NotFound from "./components/pages/NotFound";
+import Profile from "./components/pages/Profile";
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="absolute top-5 left-5">
+      <div className="absolute bottom-5 right-5 z-10">
         <ModeToggle />
       </div>
       <Routes>
@@ -29,6 +30,7 @@ function App() {
 
         <Route path="/" element={<PrivateRoutes />}>
           <Route path="/home" element={<HomePage />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
 
         <Route path="*" element={<NotFound/>}/>
