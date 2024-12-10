@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { getData } from "../utils/fetch-api-data";
 import axios from "axios";
 import LoadingScreen from "../LoadingScreen";
+import { Button } from "../ui/button";
 
 const HomePage = () => {
 	const [localDateTime, setLocalDateTime] = useState("");
@@ -13,10 +14,10 @@ const HomePage = () => {
 	const navigate = useNavigate();
 	const token = Cookies.get("token");
 
-	useEffect(() => {
-		const dateTime = new Date().toISOString();
-		setLocalDateTime(dateTime);
-	}, []);
+  useEffect(() => {
+    const dateTime = new Date().toISOString();
+    setLocalDateTime(dateTime);
+  }, []);
 
 	const handleLogout = () => {
 		Cookies.remove("token", { path: "/" });
@@ -26,14 +27,14 @@ const HomePage = () => {
 		navigate("/");
 	};
 
-	const handleTest = async () => {
-		const res = await getData("/problem");
-		console.log("Res secure : ", res);
-	};
+  const handleTest = async () => {
+    const res = await getData("/problem");
+    console.log("Res secure : ", res);
+  };
 
-	const handleStartMatch = async () => {
-		setIsLoading(true);
-		const data = { startTime: localDateTime };
+  const handleStartMatch = async () => {
+    setIsLoading(true);
+    const data = { startTime: localDateTime };
 
 		try {
 			const response = await axios.post(
@@ -63,28 +64,32 @@ const HomePage = () => {
 	const matchID = sessionStorage.getItem("matchID: ");
 
 
-	return (
-		<div className="min-h-screen flex items-center justify-center">
-			<div className="w-full max-w-md p-6">
-				<div className="flex justify-between items-center mb-8">
-					<h1 className="text-2xl font-bold">Game Dashboard</h1>
-					{token && (
-						<button
-							onClick={handleLogout}
-							className="px-4 py-2 text-red-600 hover:text-red-700 font-medium"
-						>
-							Logout
-						</button>
-					)}
-				</div>
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div>
 
-				<div className="space-y-4">
-					<button
-						onClick={handleTest}
-						className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-					>
-						Test Connection
-					</button>
+        <Button onClick={()=>navigate("/profile")}>Profile</Button>
+      </div>
+      <div className="w-full max-w-md p-6">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-2xl font-bold">Game Dashboard</h1>
+          {token && (
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 text-red-600 hover:text-red-700 font-medium"
+            >
+              Logout
+            </button>
+          )}
+        </div>
+
+        <div className="space-y-4">
+          <button
+            onClick={handleTest}
+            className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Test Connection
+          </button>
 
 					<div className="relative">
 						{isLoading ? (
