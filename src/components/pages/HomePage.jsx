@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,7 @@ import { getData } from "../utils/fetch-api-data";
 import axios from "axios";
 import LoadingScreen from "../LoadingScreen";
 import { Button } from "../ui/button";
+// import {useWebSocket} from "@/components/userOnline"
 
 const HomePage = () => {
 	const [localDateTime, setLocalDateTime] = useState("");
@@ -15,6 +16,7 @@ const HomePage = () => {
 	const token = Cookies.get("token");
 
   useEffect(() => {
+    // const { socket, isConnected } = useWebSocket();
     const dateTime = new Date().toISOString();
     setLocalDateTime(dateTime);
   }, []);

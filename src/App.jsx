@@ -20,8 +20,7 @@ import MatchSummary from "./components/MatchSummary"
 function App() {
   
   return (
-    <WebSocketProvider>
-      <BrowserRouter>
+    <BrowserRouter>
         <div className="absolute bottom-5 right-5 z-10">
           <ModeToggle />
           
@@ -33,18 +32,18 @@ function App() {
             <Route path="/signup" element={<Signup />} />
           </Route>
 
-          <Route path="/" element={<PrivateRoutes />}>
+    
+          <Route path="/" element={<WebSocketProvider><PrivateRoutes /></WebSocketProvider>}>
             <Route path="/home" element={<HomePage />} />
-            <Route path="match/:id" element={<BattleField />} />
+            <Route path="/match/:id" element={<BattleField />} />
             <Route path="/profile" element={<Profile />} />
-            {/* <Route path="/match-summary/:matchID" element={<MatchSummary />} /> */}
+            <Route path="/match-summary/:matchID" element={<MatchSummary />} />
           </Route>
 
           <Route path="*" element={<NotFound/>}/>
           
         </Routes>
       </BrowserRouter>
-    </WebSocketProvider>
   );
 }
 

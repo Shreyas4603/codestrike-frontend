@@ -16,11 +16,9 @@ export const useWebSocket = (url) => {
 			console.log("WebSocket Connected");
 		};
 
-        ws.onmessage=()=>{
-            ws.onmessage = (event) => {
-                console.log("Message: ", event.data);
-            };
-        }
+		ws.onmessage = (event) => {
+			console.log("Message: ", event.data);
+		};
 		ws.onclose = () => {
 			setIsConnected(false);
 			console.log("WebSocket Disconnected");

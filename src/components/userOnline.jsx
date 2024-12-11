@@ -1,4 +1,3 @@
-// WebSocketContext.jsx
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 const WebSocketContext = createContext(null);
@@ -7,9 +6,8 @@ export const WebSocketProvider = ({ children }) => {
 	const [ws, setWs] = useState(null);
 	const [isConnected, setIsConnected] = useState(false);
 
-	useEffect(() => {
+	const initializeWebSocket = () => {
 		const playerId = localStorage.getItem("_id:");
-        console.log()
 		if (playerId) {
 			const wsInstance = new WebSocket(
 				`${import.meta.env.VITE_ONLINE_STATUS}?playerId=${playerId}`
@@ -38,13 +36,32 @@ export const WebSocketProvider = ({ children }) => {
 				}
 			};
 		}
-        console.log(playerId,   isConnected);
-	}, []);
-
+	};
 	
 
+	useEffect(() => {
+		// Attempt to initialize on mount
+	  console.log("app mounted");
+
+		initializeWebSocket();
+
+		// Listen for changes to localStorage (e.g., player ID being set)
+		const handleStorageChange = (event) => {
+			if (event.key === "_id:" && event.newValue) {
+				initializeWebSocket();
+			}
+		};
+
+		window.addEventListener("storage", handleStorageChange);
+
+		return () => {
+			window.removeEventListener("storage", handleStorageChange);
+			if (ws) ws.close();
+		};
+	}, []);
+
 	return (
-		<WebSocketContext.Provider value={{ ws, isConnected}}>
+		<WebSocketContext.Provider value={{ ws, isConnected }}>
 			{children}
 		</WebSocketContext.Provider>
 	);

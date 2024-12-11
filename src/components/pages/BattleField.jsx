@@ -7,6 +7,7 @@ import CodeEditor from "../CodeEditor";
 import Cookies from "js-cookie";
 import { useWebSocket } from "@/components/customHook/WebSocket";
 import MatchLog from "../MatchLog";
+import FinishGame from "../FinishGame";
 
 const BattleField = () => {
 	const [battleState, setBattleState] = useState({
@@ -20,7 +21,7 @@ const BattleField = () => {
 		result: null,
 		playerResults: {}, // Track player results
 	});
-	const [pass, setPass] = useState(false)
+	// const [pass, setPass] = useState(false)
 	const navigate = useNavigate();
 	const { id:matchID } = useParams();
 	const { socket, isConnected } = useWebSocket(
@@ -32,28 +33,29 @@ const BattleField = () => {
 			console.log("event", event.data);
 			const data = JSON.parse(event.data);
 			
-			if (data.message && data.userId) {
-				// Extract score from message if it contains test results
-				const scoreMatch = data.message.match(/passed (\d+) \/ (\d+)/);
-				if (scoreMatch) {
-					const [, passed, total] = scoreMatch;
-					setBattleState((prev) => ({
-						...prev,
-						playerResults: {
-							...prev.playerResults,
-							[data.userId]: {
-								passed: parseInt(passed),
-								total: parseInt(total),
-								timestamp: new Date().toISOString(),
-							},
-						},
-					}));
-				}
-				if (battleState.playerResults[data.userId]?.passed === battleState.playerResults[data.userId]?.total) {
-					// Finish Game Button
-					setPass("True")
-				}
-			}else if(data.message == "MATCH_END"){
+			// if (data.message && data.userId) {
+			// 	// Extract score from message if it contains test results
+			// 	const scoreMatch = data.message.match(/passed (\d+) \/ (\d+)/);
+			// 	if (scoreMatch) {
+			// 		const [, passed, total] = scoreMatch;
+			// 		setBattleState((prev) => ({
+			// 			...prev,
+			// 			playerResults: {
+			// 				...prev.playerResults,
+			// 				[data.userId]: {
+			// 					passed: parseInt(passed),
+			// 					total: parseInt(total),
+			// 					timestamp: new Date().toISOString(),
+			// 				},
+			// 			},
+			// 		}));
+			// 	}
+			// 	if (battleState.playerResults[data.userId]?.passed === battleState.playerResults[data.userId]?.total) {
+			// 		// Finish Game Button
+			// 		localStorage.setItem("passedAll", true)
+			// 	}
+			// }else 
+			if(data.message == "MATCH_END"){
 				navigate(`/match-summary/${sessionStorage.getItem("matchID: ")}`);
 				console.log("Game finished!");
 			}
@@ -65,7 +67,8 @@ const BattleField = () => {
 
 	useEffect(() => {
 	  console.log("Battlefield mounted");
-	
+		const response = axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/match/${matchID}`)
+		console.log(response)
 	  return () => {
 		console.log("Battlefield unmounted");
 	  };
@@ -83,6 +86,62 @@ const BattleField = () => {
 	
 
 	// ... (keep existing fetchMatchDetails useEffect)
+	useEffect(() => {
+		const fetchMatchDetails = async () => {
+			try {
+				const startTime = new Date().toISOString();
+				const response = await axios.get(
+					`${import.meta.env.VITE_BACKEND_URL}/api/match/${matchID}`,
+					{
+						params: { startTime },
+						headers: { Authorization: `Bearer ${Cookies.get("token")}` },
+					}
+				);
+
+				const matchDetails = response.data;
+
+				setBattleState((prev) => ({
+					...prev,
+					matchDetails,
+					code: matchDetails.solutionTemplate || prev.code,
+					startTime,
+					status: "IN_PROGRESS",
+					isLoading: false,
+					error: null,
+				}));
+
+				localStorage.setItem("matchDetails", JSON.stringify(matchDetails));
+				localStorage.setItem(
+					"battleState",
+					JSON.stringify({
+						startTime,
+						status: "IN_PROGRESS",
+						code: matchDetails.solutionTemplate,
+					})
+				);
+				localStorage.setItem("code", matchDetails.solutionTemplate);
+			} catch (err) {
+				setBattleState((prev) => ({
+					...prev,
+					error: err.message,
+					isLoading: false,
+					status: "PENDING",
+				}));
+				console.error("Match Details fetch Error:", err);
+			}
+		};
+
+		if (matchID && !battleState.matchDetails) {
+			fetchMatchDetails();
+		} else {
+			setBattleState((prev) => ({
+				...prev,
+				code: localStorage.getItem("code") || prev.code,
+				isLoading: false,
+			}));
+			
+		}
+	}, [matchID]);
 
 	const handleEndMatch = useCallback(() => {
 		const endTime = new Date().toISOString();
@@ -123,7 +182,12 @@ const BattleField = () => {
 					Authorization: `Bearer ${Cookies.get("token")}`,
 				},
 			});
-			console.log(response.data.details)
+			console.log(response.data)
+			if(response.data.total_testcases === response.data.passed){
+				localStorage.setItem("passedAll", true)
+			}else{
+				localStorage.setItem("passedAll", false)
+			}
 			// setBattleState((prev) => ({
 			// 	...prev,
 			// 	status: "SUBMITTED",
@@ -142,9 +206,9 @@ const BattleField = () => {
 		console.log("Game finished!");
 	}, []);
 
-	if (!battleState.matchDetails) {
-		return <NotFound />;
-	}
+	// if (!battleState.matchDetails) {
+	// 	return <NotFound />;
+	// }
 
 	return (
 		<div className="battlefield-container">
@@ -171,21 +235,15 @@ const BattleField = () => {
 					>
 						Submit
 					</button>
-					{pass && (
-						<button
-							onClick={handleFinishGame}
-							className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-						>
-							Finish Game
-						</button>	
-					)}
+					<FinishGame handleFinishGame={handleFinishGame} pass={localStorage.getItem("passedAll") === "true"}/>
+		
 				</div>
 			</div>
 
 			<div className=" gap-4 m-4 flex">
 				<div className="problem-statement lg:w-1/3 flex-col">
 					<div className="h-2/3">
-						<Markdown>{battleState.matchDetails.problemStatement}</Markdown>
+						<Markdown>{battleState?.matchDetails?.problemStatement}</Markdown>
 					</div>
 					<div className="match-log-container m-4 h-1/3">
 						<MatchLog socket={socket} />
