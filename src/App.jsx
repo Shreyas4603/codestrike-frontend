@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import {
   BrowserRouter,
   Route,
@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import Cookies from "js-cookie";
 import { ModeToggle } from "./components/mode-toggle";
-
+import { WebSocketProvider, useWebSocket } from "./components/userOnline";
 import Login from "./components/Authentication/Login";
 import { PrivateRoutes } from "./components/utils/PrivateRoutes";
 import { PublicRoutes } from "./components/utils/PublicRoutes";
@@ -15,37 +15,38 @@ import Signup from "./components/Authentication/Signup";
 import NotFound from "./components/pages/NotFound";
 import Profile from "./components/pages/Profile";
 import BattleField from "./components/pages/BattleField";
+import MatchSummary from "./components/MatchSummary"
 
 function App() {
+  
   return (
-    <BrowserRouter>
-      <div className="absolute bottom-5 right-5 z-10">
-        <ModeToggle />
-      </div>
-      <Routes>
+    <WebSocketProvider>
+      <BrowserRouter>
+        <div className="absolute bottom-5 right-5 z-10">
+          <ModeToggle />
+          
+        </div>
+        <Routes>
 
-        <Route path="/" element={<PublicRoutes />}>
-          <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-        </Route>
+          <Route path="/" element={<PublicRoutes />}>
+            <Route path="/" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+          </Route>
 
-        <Route path="/" element={<PrivateRoutes />}>
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/match/:matchID" element={<BattleField />} />
-          <Route path="/profile" element={<Profile />} />
-        </Route>
+          <Route path="/" element={<PrivateRoutes />}>
+            <Route path="/home" element={<HomePage />} />
+            <Route path="match/:id" element={<BattleField />} />
+            <Route path="/profile" element={<Profile />} />
+            {/* <Route path="/match-summary/:matchID" element={<MatchSummary />} /> */}
+          </Route>
 
-        <Route path="*" element={<NotFound/>}/>
-        
-      </Routes>
-    </BrowserRouter>
+          <Route path="*" element={<NotFound/>}/>
+          
+        </Routes>
+      </BrowserRouter>
+    </WebSocketProvider>
   );
 }
 
 export default App;
-{
-  /* 
-{/* <Navigation /> */
-}
 
-// </Router> */} */}

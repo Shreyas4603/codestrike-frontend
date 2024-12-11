@@ -64,6 +64,7 @@ const Login = () => {
                   placeholder="e.g:youremail@example.com"
                   id="email"
                   name="email"
+                  required
                 />
               </div>
               <div className="space-y-1">
@@ -74,6 +75,7 @@ const Login = () => {
                   id="password"
                   name="password"
                   autoComplete="new-password"
+                  required
                 />
               </div>
               <Button type="submit" className="w-full rounded-3xl">

@@ -10,7 +10,7 @@ import { Button } from "../ui/button";
 const HomePage = () => {
 	const [localDateTime, setLocalDateTime] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
-	// const [matchResponse, setMatchResponse] = useState(null);
+	const [abortController, setAbortController] = useState(null);
 	const navigate = useNavigate();
 	const token = Cookies.get("token");
 
@@ -34,34 +34,52 @@ const HomePage = () => {
 
   const handleStartMatch = async () => {
     setIsLoading(true);
+    const controller = new AbortController();
+    setAbortController(controller);
+    
     const data = { startTime: localDateTime };
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/start/match`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          signal: controller.signal
+        }
+      );
+      console.log(response)
+      if (response.data === "Match creation failed.") {
+        toast.error("Match creation failed. Please try again.");
+      } else if (response.data === "Match cancelled due to opponent disconnect") {
+        toast.error("Match creation failed. Please try again.");
+      } else {
+        toast.success("Match started successfully!");
+        console.log(response.data)
+        sessionStorage.setItem("matchID: ", response.data);
+        navigate(`/match/${sessionStorage.getItem("matchID: ")}`);
+      }
+    } catch (error) {
+      if (error.name === 'CanceledError') {
+        toast.info('Match request cancelled');
+      } else {
+        console.error("Error starting match:", error);
+        toast.error("Failed to start match. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
+      setAbortController(null);
+    }
+  };
 
-		try {
-			const response = await axios.post(
-				`${import.meta.env.VITE_BACKEND_URL}/api/start/match`,
-				data,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-			// console.log(response)
-			// setMatchResponse(response.data);
-			sessionStorage.setItem("matchID: ",response.data)
-			// const matchID = sessionStorage.getItem("matchID: ");
-			// console.log(matchID)
-			toast.success("Match started successfully!");
-			navigate(`/match/${sessionStorage.getItem("matchID: ")}`);
-		} catch (error) {
-			console.error("Error starting match:", error);
-			toast.error("Failed to start match. Please try again.");
-		} finally {
-			setIsLoading(false);
-		}
-	};
+  const handleCancelMatch = () => {
+    if (abortController) {
+      abortController.abort();
+    }
+  };
 
-	const matchID = sessionStorage.getItem("matchID: ");
+  const matchID = sessionStorage.getItem("matchID: ");
 
 
   return (
@@ -93,10 +111,16 @@ const HomePage = () => {
 
 					<div className="relative">
 						{isLoading ? (
-							<div className="flex justify-center py-2">
+							<div className="flex flex-col items-center gap-2 py-2">
 								<div className="scale-75">
 									<LoadingScreen />
 								</div>
+								<button
+									onClick={handleCancelMatch}
+									className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+								>
+									Cancel Request
+								</button>
 							</div>
 						) : matchID ? (
 							<button
