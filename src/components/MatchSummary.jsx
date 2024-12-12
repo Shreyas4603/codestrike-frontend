@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/accordion";
 
 const MatchSummary = () => {
-	const { id } = useParams();
+	const { matchID } = useParams();
 	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState(null);
 	const [matchResult, setMatchResult] = useState(null);
@@ -30,7 +30,7 @@ const MatchSummary = () => {
 			}
 
 			try {
-				const endpoint = `api/end/${id}`;
+				const endpoint = `api/end/${matchID}`;
 				const response = await axios.get(
 					`${import.meta.env.VITE_BACKEND_URL}/${endpoint}`,
 					{
