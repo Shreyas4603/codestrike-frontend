@@ -1,16 +1,18 @@
 import React, { useEffect } from "react";
+import { Button } from "./ui/button";
 
 const FinishGame = ({ handleFinishGame, pass }) => {
     
 	return (
 		<>
 			{pass && (
-				<button
+				<Button
 					onClick={handleFinishGame}
-					className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+					size="sm"
+					className="bg-green-700 text-white"
 				>
 					Finish Game
-				</button>
+				</Button>
 			)}
 		</>
 	);

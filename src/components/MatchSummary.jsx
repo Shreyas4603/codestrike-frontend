@@ -4,7 +4,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const MatchSummary = () => {
-	const { matchID } = useParams();
+	const { id } = useParams();
 	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState(null);
 	const navigate = useNavigate();
@@ -19,7 +19,7 @@ const MatchSummary = () => {
 			}
 
 			try {
-				const endpoint = `/api/end/${matchID}`;
+				const endpoint = `/api/end/${id}`;
 				const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}${endpoint}`, {
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -38,7 +38,7 @@ const MatchSummary = () => {
 		};
 
 		fetchData();
-	}, [matchID]);
+	}, [id]);
 
 	if (loading) {
 		return <div>Loading...</div>;
