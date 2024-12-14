@@ -9,6 +9,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import Cookies from "js-cookie";
 
 const Profile = () => {
   const [profileData, setprofileData] = useState();
@@ -114,9 +118,22 @@ const Profile = () => {
       }
     }
   }, [matchDetails, playerType]);
+  const navigate=useNavigate()
 
+
+  const handleLogout = () => {
+    Cookies.remove("token", { path: "/" });
+    localStorage.removeItem("username:");
+    localStorage.removeItem("_id:");
+    toast.success("Logged out successfully!");
+    navigate("/");
+  };
   return (
-    <div className="h-screen w-full p-9">
+    <div className="h-screen w-full pt-2 p-9">
+      <div className="pb-5 flex items-center justify-between">
+        <Button onClick={()=>navigate("/home")} className="bg-transparent text-primary flex hover:bg-primary/10 items-center gap-3 "><ArrowLeft />Back</Button>
+        <Button onClick={handleLogout} variant={"destructive"} className="bg-transparent text-red-500">Logout</Button>
+      </div>
       <div>
         <p className="text-5xl font-bold">Profile</p>
         <div className="py-5 flex items-center justify-center gap-5 w-fit">

@@ -57,7 +57,7 @@ const LoadingScreen = () => {
 	return (
 		<div className="flex items-center justify-center p-2">
 			<div className="text-center">
-				<p className="text-sm font-medium mb-2">Finding Match...</p>
+				{/* <p className="text-sm font-medium mb-2">Finding Match...</p> */}
 				<div className="flex justify-center items-center gap-4">
 					<AnimatedIcon icon={Search} delay={0} />
 					<AnimatedVersus />

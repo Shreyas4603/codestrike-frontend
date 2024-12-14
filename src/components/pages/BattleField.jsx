@@ -435,55 +435,57 @@ const BattleField = () => {
         </ResizablePanel>
       </ResizablePanelGroup>
 
-      <div className="battlefield-container bg-red-9 00 p-1 h-screen">
-        <div className="battlefield-header m-4 bg -green-300">
-          <div className="connection-status">
-            Status: {isConnected ? "Connected" : "Disconnected"}
-          </div>
-          <div className="battlefield-actions space-x-4">
-            <button
-              onClick={() => navigate("/home")}
-              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-            >
-              Back
-            </button>
-            <button
-              onClick={handleEndMatch}
-              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            >
-              End match
-            </button>
-            <button
-              onClick={handleSubmitCode}
-              className="px-4 py-2 bg-gr een-500 text-white rounded hover:bg-green-600"
-            >
-              Submit
-            </button>
-            <FinishGame handleFinishGame={handleFinishGame} pass={allPass} />
-          </div>
-        </div>
-        {/* <PersistentTimer /> */}
-        <div className=" gap-4 m-4 flex bg-pink -600 p-1">
-          <div className="problem-statement lg:w-1/3 flex-col">
-            <div className="h-2/3">
-              <Markdown>{battleState?.matchDetails?.problemStatement}</Markdown>
-            </div>
-            <div className="match-log-container m-4 h-1/3">
-              <MatchLog socket={socket} />
-            </div>
-          </div>
 
-          <div className="code-editor lg:w-2/3 bg-teal-500 p-1">
-            <CodeEditor
-              code={battleState.code}
-              onChange={handleCodeChange}
-              readOnly={battleState.status === "SUBMITTED"}
-            />
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
 
 export default BattleField;
+{/* <div className="battlefield-container bg-red-9 00 p-1 h-screen">
+<div className="battlefield-header m-4 bg -green-300">
+  <div className="connection-status">
+    Status: {isConnected ? "Connected" : "Disconnected"}
+  </div>
+  <div className="battlefield-actions space-x-4">
+    <button
+      onClick={() => navigate("/home")}
+      className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+    >
+      Back
+    </button>
+    <button
+      onClick={handleEndMatch}
+      className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+    >
+      End match
+    </button>
+    <button
+      onClick={handleSubmitCode}
+      className="px-4 py-2 bg-gr een-500 text-white rounded hover:bg-green-600"
+    >
+      Submit
+    </button>
+    <FinishGame handleFinishGame={handleFinishGame} pass={allPass} />
+  </div>
+</div>
+  
+<div className=" gap-4 m-4 flex bg-pink -600 p-1">
+  <div className="problem-statement lg:w-1/3 flex-col">
+    <div className="h-2/3">
+      <Markdown>{battleState?.matchDetails?.problemStatement}</Markdown>
+    </div>
+    <div className="match-log-container m-4 h-1/3">
+      <MatchLog socket={socket} />
+    </div>
+  </div>
+
+  <div className="code-editor lg:w-2/3 bg-teal-500 p-1">
+    <CodeEditor
+      code={battleState.code}
+      onChange={handleCodeChange}
+      readOnly={battleState.status === "SUBMITTED"}
+    />
+  </div>
+</div>
+</div> 
+*/}
