@@ -64,3 +64,25 @@
     @apply bg-background text-foreground;
   }
 }
+  /* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: auto;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 10px;
+
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #adadad;
+    border-radius: 20px;
+    /* border: 4px solid #ffffff; */
+  }
