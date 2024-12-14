@@ -125,6 +125,7 @@ const Profile = () => {
     Cookies.remove("token", { path: "/" });
     localStorage.removeItem("username:");
     localStorage.removeItem("_id:");
+    localStorage.clear()
     toast.success("Logged out successfully!");
     navigate("/");
   };
