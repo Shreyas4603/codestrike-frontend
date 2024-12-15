@@ -16,6 +16,7 @@
     "@radix-ui/react-dropdown-menu": "^2.1.2",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
+    "aws-amplify": "^6.10.3",
     "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -35,11 +36,17 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@aws-amplify/backend": "^1.9.0",
+    "@aws-amplify/backend-cli": "^1.4.3",
     "@eslint/js": "^9.9.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.20",
+    "aws-cdk": "^2.173.1",
+    "aws-cdk-lib": "^2.173.1",
+    "constructs": "^10.4.2",
+    "esbuild": "^0.24.0",
     "eslint": "^9.9.0",
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
@@ -47,6 +54,8 @@
     "globals": "^15.9.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
     "vite": "^5.4.1"
   }
 }
