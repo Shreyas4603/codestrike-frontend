@@ -1,0 +1,21 @@
+@keyframes cyberpunkBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.cyberpunkBackground {
+  background: linear-gradient(-90deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: cyberpunkBG 12s ease infinite;
+}
+
+.neonCard {
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.neonCard:hover {
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+}
+

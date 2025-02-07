@@ -1,0 +1,32 @@
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.gradientBackground {
+  background: linear-gradient(-225deg, #4382f7, #4186fcd4, #00b3dbdd, #0ea9ec);
+
+  background-size: 300% 300%;
+  animation: gradientBG 10s ease infinite;
+}
+
+@keyframes float {
+  0% { transform: translatey(0px); }
+  50% { transform: translatey(-20px); }
+  100% { transform: translatey(0px); }
+}
+
+.floatingElement {
+  animation: float 6s ease-in-out infinite;
+}
+
+.glowingCard {
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.glowingCard:hover {
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+}
+

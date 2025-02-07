@@ -1,0 +1,44 @@
+/* HomePage.module.css */
+
+.container {
+  position: relative; /* Create a stacking context */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: transparent; /* Remove any previous background */
+}
+
+/* Style for the background canvas */
+.backgroundCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Ensure the canvas is behind your UI */
+}
+
+/* Your existing component styles remain unchanged */
+.imageContainer {
+  position: relative;
+  box-shadow: 0 0 50px 10px rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.profileButton {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.profileButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

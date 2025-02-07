@@ -46,8 +46,6 @@ const MatchSummary = () => {
 				if (savedCode) {
 					setUserCode(savedCode);
 				}
-
-				
 			} catch (error) {
 				console.error("Error fetching data:", error);
 			} finally {
@@ -114,20 +112,20 @@ const MatchSummary = () => {
 	};
 
 	const getCardStyle = (deltaRating) => {
-		if (deltaRating > 0) return "border-green-500 ";
-		if (deltaRating < 0) return "border-red-500 ";
+		if (deltaRating > 0) return "border-green-500 bg-green-100/50";
+		if (deltaRating < 0) return "border-red-500 bg-red-100/50";
 		return "border-gray-500 bg-gray-100/50";
 	};
 
 	const PlayerCard = ({ player, title }) => (
-		<Card className={`w-full border-2 ${getCardStyle(player?.deltaRating)}`}>
+		<Card className={`w-full border-2 ${getCardStyle(player.deltaRating)}`}>
 			<CardHeader>
 				<CardTitle className="flex items-center gap-2">
 					<Award
 						className={
-							player?.deltaRating > 0
+							player.deltaRating > 0
 								? "text-green-500"
-								: player?.deltaRating < 0
+								: player.deltaRating < 0
 								? "text-red-500"
 								: "text-gray-500"
 						}
@@ -140,25 +138,25 @@ const MatchSummary = () => {
 					<div className="flex items-center gap-2">
 						<Clock className="w-4 h-4" />
 						<span className="font-medium">Execution Time:</span>
-						<span>{player?.deltaRating > 0 ? player?.executionTime?.toFixed(3) + " ms" : "NA"}</span>
-						</div>
+						<span>{player.executionTime}ms</span>
+					</div>
 					<div className="flex items-center gap-2">
 						<CheckCircle className="text-green-500 w-4 h-4" />
 						<span className="font-medium">Passed:</span>
-						{player?.passed}/{player.totalCases}
+						{player.passed}/{player.totalCases}
 					</div>
 					<div className="flex items-center gap-2">
 						<XCircle className="text-red-500 w-4 h-4" />
 						<span className="font-medium">Failed:</span>
-						{player?.failed}/{player.totalCases}
+						{player.failed}/{player.totalCases}
 					</div>
 					<div className="flex items-center gap-2">
 						<span className="font-medium">Rating Change:</span>
 						<span
 							className={player.deltaRating > 0 ? "text-green-500" : "text-red-500"}
 						>
-							{player?.deltaRating > 0 ? "+" : ""}
-							{player?.deltaRating}
+							{player.deltaRating > 0 ? "+" : ""}
+							{player.deltaRating}
 						</span>
 					</div>
 				</div>
@@ -171,8 +169,8 @@ const MatchSummary = () => {
 			<div className="max-w-5xl mx-auto">
 				{matchResult && (
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-						<PlayerCard player={matchResult?.player} title="Your Performance" />
-						<PlayerCard player={matchResult?.opponent} title="Opponent's Performance" />
+						<PlayerCard player={matchResult.player} title="Your Performance" />
+						<PlayerCard player={matchResult.opponent} title="Opponent's Performance" />
 					</div>
 				)}
 
