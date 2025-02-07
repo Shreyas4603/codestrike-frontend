@@ -39,7 +39,8 @@ const MatchSummary = () => {
 						},
 					}
 				);
-				setData(response.data);
+				setData(response);
+				console.log(response);
 				processMatchResult(response.data);
 
 				const savedCode = localStorage.getItem("code");
@@ -52,7 +53,7 @@ const MatchSummary = () => {
 				setLoading(false);
 			}
 		};
-
+		console.log("data:" + data);
 		fetchData();
 	}, [matchID]);
 

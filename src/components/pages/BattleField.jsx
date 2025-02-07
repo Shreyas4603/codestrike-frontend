@@ -85,7 +85,7 @@ const BattleField = () => {
     const response = axios.get(
       `${import.meta.env.VITE_BACKEND_URL}/api/match/${matchID}`
     );
-    console.log(response);
+    console.log(response.response);
     return () => {
       console.log("Battlefield unmounted");
     };
@@ -191,11 +191,12 @@ const BattleField = () => {
     localStorage.removeItem("matchDetails");
     localStorage.removeItem("code");
     localStorage.removeItem("battleState");
-    sessionStorage.removeItem("matchID: ");
+    // sessionStorage.removeItem("matchID: ");
 
     localStorage.removeItem("timer-end-time");
 
-    navigate("/home");
+     navigate(`/match-summary/${sessionStorage.getItem("matchID: ")}`);
+		 console.log("Game finished!");
   }, [socket, navigate]);
 
   const handleCodeChange = useCallback((newCode) => {
@@ -304,7 +305,7 @@ const BattleField = () => {
                 variant={"destructive"}
                 className=""
                 size={"sm"}
-                disabled
+                // disabled
               >
                 End match
               </Button>
