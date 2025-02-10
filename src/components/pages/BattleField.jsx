@@ -102,78 +102,82 @@ const BattleField = () => {
   }, [socket, handleWebSocketMessage]);
 
   // ... (keep existing fetchMatchDetails useEffect)
-  useEffect(() => {
-    const fetchMatchDetails = async () => {
-      try {
-        const startTime = new Date().toISOString();
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/match/${matchID}`,
-          {
-            params: { startTime },
-            headers: { Authorization: `Bearer ${Cookies.get("token")}` },
-          }
-        );
+ useEffect(() => {
+		const fetchMatchDetails = async () => {
+			try {
+				const startTime = new Date().toISOString();
+				const response = await axios.get(
+					`${import.meta.env.VITE_BACKEND_URL}/api/match/${matchID}`,
+					{
+						params: { startTime },
+						headers: { Authorization: `Bearer ${Cookies.get("token")}` },
+					}
+				);
 
-        const matchDetails = response?.data;
+				const matchDetails = response?.data;
 
-        if (response.data) {
-          //supposed set states here
-          console.log("hgghg");
-          if (username == matchDetails.player1Name) {
-            setopponentData({
-              name: matchDetails?.player2Name,
-              rating: matchDetails?.player2Rating,
-            });
-          } else if (username == matchDetails.player2Name) {
-            setopponentData({
-              name: matchDetails?.player1Name,
-              rating: matchDetails?.player1Rating,
-            });
-          }
-        }
-        // console.log(response.data);
+				// Set opponent data if needed
+				if (matchDetails) {
+					if (username === matchDetails.player1Name) {
+						setopponentData({
+							name: matchDetails.player2Name,
+							rating: matchDetails.player2Rating,
+						});
+					} else if (username === matchDetails.player2Name) {
+						setopponentData({
+							name: matchDetails.player1Name,
+							rating: matchDetails.player1Rating,
+						});
+					}
+				}
 
-        setBattleState((prev) => ({
-          ...prev,
-          matchDetails,
-          code: matchDetails.solutionTemplate || prev.code,
-          startTime,
-          status: "IN_PROGRESS",
-          isLoading: false,
-          error: null,
-        }));
+				// Check if there's already saved code in localStorage.
+				const storedCode = localStorage.getItem("code");
+				// Use the stored code if available; otherwise, use the solution template from matchDetails.
+				const codeToUse = storedCode || matchDetails.solutionTemplate;
 
-        localStorage.setItem("matchDetails", JSON.stringify(matchDetails));
-        localStorage.setItem(
-          "battleState",
-          JSON.stringify({
-            startTime,
-            status: "IN_PROGRESS",
-            code: matchDetails.solutionTemplate,
-          })
-        );
-        localStorage.setItem("code", matchDetails.solutionTemplate);
-      } catch (err) {
-        setBattleState((prev) => ({
-          ...prev,
-          error: err.message,
-          isLoading: false,
-          status: "PENDING",
-        }));
-        console.error("Match Details fetch Error:", err);
-      }
-    };
+				setBattleState((prev) => ({
+					...prev,
+					matchDetails,
+					code: codeToUse,
+					startTime,
+					status: "IN_PROGRESS",
+					isLoading: false,
+					error: null,
+				}));
 
-    if (matchID) {
-      fetchMatchDetails();
-    } else {
-      setBattleState((prev) => ({
-        ...prev,
-        code: localStorage.getItem("code") || prev.code,
-        isLoading: false,
-      }));
-    }
-  }, [matchID]);
+				localStorage.setItem("matchDetails", JSON.stringify(matchDetails));
+				localStorage.setItem(
+					"battleState",
+					JSON.stringify({
+						startTime,
+						status: "IN_PROGRESS",
+						code: codeToUse,
+					})
+				);
+				localStorage.setItem("code", codeToUse);
+			} catch (err) {
+				setBattleState((prev) => ({
+					...prev,
+					error: err.message,
+					isLoading: false,
+					status: "PENDING",
+				}));
+				console.error("Match Details fetch Error:", err);
+			}
+		};
+
+		if (matchID) {
+			fetchMatchDetails();
+		} else {
+			setBattleState((prev) => ({
+				...prev,
+				code: localStorage.getItem("code") || prev.code,
+				isLoading: false,
+			}));
+		}
+ }, [matchID]);
+
 
   const handleEndMatch = useCallback(() => {
     const endTime = new Date().toISOString();
@@ -242,6 +246,10 @@ const BattleField = () => {
     }
   }, [matchID]);
 
+  const handleTimerEnd = () => {
+		handleFinishGame();
+  };
+
   const handleFinishGame = useCallback(() => {
     navigate(`/match-summary/${sessionStorage.getItem("matchID: ")}`);
     console.log("Game finished!");
@@ -252,191 +260,231 @@ const BattleField = () => {
   // }
 
   return (
-    <div className="h-screen w-full">
-      {/* <div><PersistentTimer/></div> */}
-      <ResizablePanelGroup direction="horizontal" className="w-full h-full">
-        <ResizablePanel defaultSize={25}>
-          <div className="  p-2 border-b border-border opopnet data w-full">
-            {/* <p>Opponent</p> */}
-            <p className="p-2  text-md px-3 font-medium w-fit text-center mx-auto ">
-              Opponent :{" "}
-              <span className="bg-destructive p-1 px-3 rounded-md">
-                {opponentData?.name} ({opponentData?.rating})
-              </span>
-              {/* {JSON.stringify(opponentData)} */}
-            </p>
-          </div>
-          <ResizablePanelGroup direction="vertical" className="w-full">
-            <ResizablePanel defaultSize={25}>
-              <section className=" overflow-auto h-full">
-                <div className=" p-3 h-full">
-                  <p className="text-2xl font-semibold">Problem Statement</p>
-                  <Markdown className="p-3 bg-blue-600 overflow-auto">
-                    {battleState?.matchDetails?.problemStatement}
-                  </Markdown>
-                </div>
-              </section>
-            </ResizablePanel>
+		<div className="h-screen w-full">
+			{/* <div><PersistentTimer/></div> */}
+			<ResizablePanelGroup direction="horizontal" className="w-full h-full">
+				<ResizablePanel defaultSize={25}>
+					<div className="  p-2 border-b border-border opopnet data w-full">
+						{/* <p>Opponent</p> */}
+						<p className="p-2  text-md px-3 font-medium w-fit text-center mx-auto ">
+							Opponent :{" "}
+							<span className="bg-destructive p-1 px-3 rounded-md">
+								{opponentData?.name} ({opponentData?.rating})
+							</span>
+							{/* {JSON.stringify(opponentData)} */}
+						</p>
+					</div>
+					<ResizablePanelGroup direction="vertical" className="w-full">
+						<ResizablePanel defaultSize={25}>
+							<section className=" overflow-auto h-full">
+								<div className=" p-3 h-full">
+									<p className="text-2xl font-semibold">Problem Statement</p>
+									<Markdown className="p-3 bg-blue-600 overflow-auto">
+										{battleState?.matchDetails?.problemStatement}
+									</Markdown>
+								</div>
+							</section>
+						</ResizablePanel>
 
-            <ResizableHandle withHandle />
+						<ResizableHandle withHandle />
 
-            <ResizablePanel defaultSize={25}>
-              <section className="logs h-full ">
-                <div className="h-full ">
-                  <MatchLog socket={socket} />
-                </div>
-              </section>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </ResizablePanel>
+						<ResizablePanel defaultSize={25}>
+							<section className="logs h-full ">
+								<div className="h-full ">
+									<MatchLog socket={socket} />
+								</div>
+							</section>
+						</ResizablePanel>
+					</ResizablePanelGroup>
+				</ResizablePanel>
 
-        <ResizableHandle withHandle />
+				<ResizableHandle withHandle />
 
-        <ResizablePanel defaultSize={70}>
-          <ResizablePanelGroup direction="vertical">
-            <div className=" flex items-center justify-between p-2 gap-3">
-              <div className="timer  text-center  rounded-md flex-1  flex items-center justify-center">
-                <PersistentTimer />
-              </div>
+				<ResizablePanel defaultSize={70}>
+					<ResizablePanelGroup direction="vertical">
+						<div className=" flex items-center justify-between p-2 gap-3">
+							<div className="timer  text-center  rounded-md flex-1  flex items-center justify-center">
+								<PersistentTimer onTimerEnd={handleTimerEnd} />
+							</div>
 
-              <Button
-                onClick={handleEndMatch}
-                variant={"destructive"}
-                className=""
-                size={"sm"}
-                disabled
-              >
-                End match
-              </Button>
-            </div>
+							<Button
+								onClick={() => {
+									const isConfirmed = window.confirm(
+										"Are you sure? The opponent can still participate the match, and there is avery high chance you may loose."
+									);
+									if (isConfirmed) {
+										handleEndMatch();
+									}
+								}}
+								variant="destructive"
+								size="sm"
+								// disabled
+							>
+								End match
+							</Button>
+						</div>
 
-            <ResizablePanel defaultSize={25}>
-              <div className="code-editor h-full w-full bg-teal -500 p- 1">
-                <CodeEditor
-                  className=""
-                  code={battleState.code}
-                  onChange={handleCodeChange}
-                  readOnly={battleState.status === "SUBMITTED"}
-                />
-              </div>
-            </ResizablePanel>
+						<ResizablePanel defaultSize={25}>
+							<div className="code-editor h-full w-full bg-teal -500 p- 1">
+								<CodeEditor
+									className=""
+									code={battleState.code}
+									onChange={handleCodeChange}
+									readOnly={battleState.status === "SUBMITTED"}
+								/>
+							</div>
+						</ResizablePanel>
 
-            <ResizableHandle withHandle />
+						<ResizableHandle withHandle />
 
-            <ResizablePanel defaultSize={25} className="h-full">
-              <section className="h-full">
-                <div className="bg-red -900 p-1 py-2 w-full flex items-center justify-end gap-3">
-                  <Button onClick={handleSubmitCode} className="" size={"sm"}>
-                    Run code
-                  </Button>
+						<ResizablePanel defaultSize={25} className="h-full">
+							<section className="h-full">
+								<div className="bg-red -900 p-1 py-2 w-full flex items-center justify-end gap-3">
+									<Button onClick={handleSubmitCode} className="" size={"sm"}>
+										Run code
+									</Button>
 
-                  <FinishGame
-                    handleFinishGame={handleFinishGame}
-                    pass={localStorage.getItem("passedAll") === "true"}
-                  />
-                </div>
+									<FinishGame
+										handleFinishGame={handleFinishGame}
+										pass={localStorage.getItem("passedAll") === "true"}
+									/>
+								</div>
 
-                <Separator className="" />
+								<Separator className="" />
 
-                <div className="p-5 overflow-auto h-full  ">
-                  <p className="font-bold text-lg">Submission results</p>
-                  {submitResults ? (
-                    <div className="">
-                      <div className="flex items-center  gap-3 text-secondary-foreground/50 text-sm">
-                        <p className="capitalize">
-                          Execution status :{" "}
-                          <span
-                            className={`${
-                              submitResults?.execution_status == "completed"
-                                ? "text-green-600"
-                                : "text-red-600"
-                            }`}
-                          >
-                            {submitResults?.execution_status}
-                          </span>
-                        </p>
-                        <p className="">
-                          Execution Time:{" "}
-                          <span className="text-primary">
-                            {submitResults?.execution_time_ms?.toFixed(2)}ms{" "}
-                          </span>
-                        </p>
-                      </div>
+								<div className="p-5 overflow-auto h-full  ">
+									<p className="font-bold text-lg">Submission results</p>
+									{submitResults ? (
+										<div className="">
+											<div className="flex items-center  gap-3 text-secondary-foreground/50 text-sm">
+												<p className="capitalize">
+													Execution status :{" "}
+													<span
+														className={`${
+															submitResults?.execution_status ==
+															"completed"
+																? "text-green-600"
+																: "text-red-600"
+														}`}
+													>
+														{submitResults?.execution_status}
+													</span>
+												</p>
+												<p className="">
+													Execution Time:{" "}
+													<span className="text-primary">
+														{submitResults?.execution_time_ms?.toFixed(
+															2
+														)}
+														ms{" "}
+													</span>
+												</p>
+											</div>
 
-                      <div className="p-2 mt-3 bg-re d-900 h-full space-y-3">
-                        <p
-                          className={`${
-                            submitResults?.passed > 0
-                              ? "bg-green-700"
-                              : "bg-destructive"
-                          } px-4 rounded-sm py-3 `}
-                        >
-                          Passed {submitResults?.passed}/
-                          {submitResults?.total_testcases} cases
-                        </p>
-                        {submitResults?.details?.length > 0 ? (
-                          <div>
-                            <p className="font-medium">Details</p>
-                            <div>
-                              <p>
-                                Input:{" "}
-                                <span>{JSON.stringify(submitResults?.details[0]?.input)}</span>
-                              </p>
-                              <p>
-                                Expected:{" "}
-                                <span>
-                                  {JSON.stringify(submitResults?.details[0]?.expected)}
-                                </span>
-                              </p>
-                              <p>
-                                Your output:{" "}
-                                <span>{JSON.stringify(submitResults?.details[0]?.output)}</span>
-                              </p>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="h-full w-full bg-red -900 flex items-center justify-center">
-                            <div>
-                              <div className=" font-bold  flex items-center justify-center gap-5">
-                                <PartyPopper
-                                  size={75}
-                                  opacity={0.7}
-                                  color="green"
-                                />
-                                <div>
-                                  <p className="text-primary/50">
-                                    You have cleared all the testcases
-                                  </p>
-                                  <p>
-                                    {" "}
-                                    Click the Finish Game button to secure the
-                                    win
-                                  </p>
-                                </div>
-                              </div>
-                              <span></span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center mt-5 text-primary/50">
-                      <div className="flex gap-3 items-center">
-                        <OctagonX size={20} />
-                        <p>No results yet. Run code to see results</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </section>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-
-
-    </div>
+											<div className="p-2 mt-3 bg-re d-900 h-full space-y-3">
+												<p
+													className={`${
+														submitResults?.passed > 0
+															? "bg-green-700"
+															: "bg-destructive"
+													} px-4 rounded-sm py-3 `}
+												>
+													Passed {submitResults?.passed}/
+													{submitResults?.total_testcases} cases
+												</p>
+												{submitResults?.details?.length > 0 ? (
+													<div>
+														<p className="font-medium">Details</p>
+														<div>
+															<p>
+																Input:{" "}
+																<span>
+																	{JSON.stringify(
+																		submitResults?.details[0]
+																			?.input
+																	)}
+																</span>
+															</p>
+															<p>
+																Error:{" "}
+																<span>
+																	{JSON.stringify(
+																		submitResults?.details[0]
+																			?.error
+																	)}
+																</span>
+															</p>
+															<p>
+																Status:{" "}
+																<span>
+																	{JSON.stringify(
+																		submitResults?.details[0]
+																			?.status
+																	)}
+																</span>
+															</p>
+															<p>
+																Expected:{" "}
+																<span>
+																	{JSON.stringify(
+																		submitResults?.details[0]
+																			?.expected
+																	)}
+																</span>
+															</p>
+															<p>
+																Your output:{" "}
+																<span>
+																	{JSON.stringify(
+																		submitResults?.details[0]
+																			?.output
+																	)}
+																</span>
+															</p>
+														</div>
+													</div>
+												) : (
+													<div className="h-full w-full bg-red -900 flex items-center justify-center">
+														<div>
+															<div className=" font-bold  flex items-center justify-center gap-5">
+																<PartyPopper
+																	size={75}
+																	opacity={0.7}
+																	color="green"
+																/>
+																<div>
+																	<p className="text-primary/50">
+																		You have cleared all the
+																		testcases
+																	</p>
+																	<p>
+																		{" "}
+																		Click the Finish Game button
+																		to secure the win
+																	</p>
+																</div>
+															</div>
+															<span></span>
+														</div>
+													</div>
+												)}
+											</div>
+										</div>
+									) : (
+										<div className="w-full h-full flex items-center justify-center mt-5 text-primary/50">
+											<div className="flex gap-3 items-center">
+												<OctagonX size={20} />
+												<p>No results yet. Run code to see results</p>
+											</div>
+										</div>
+									)}
+								</div>
+							</section>
+						</ResizablePanel>
+					</ResizablePanelGroup>
+				</ResizablePanel>
+			</ResizablePanelGroup>
+		</div>
   );
 };
 

@@ -110,6 +110,7 @@ const MatchSummary = () => {
 		localStorage.setItem("passedAll", false);
 		localStorage.removeItem("battleState");
 		localStorage.removeItem("matchDetails");
+		localStorage.removeItem("timer-end-time");
 		navigate("/home");
 	};
 
