@@ -41,7 +41,7 @@ export const WebSocketProvider = ({ children }) => {
 
 	useEffect(() => {
 		// Attempt to initialize on mount
-	  console.log("app mounted");
+	//   console.log("app mounted");
 
 		initializeWebSocket();
 

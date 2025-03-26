@@ -32,7 +32,7 @@ const Login = () => {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/login`, data);
       // console.log(response);
       if (response.status === 200) {
-        console.log(response)
+        // console.log(response)
         toast.success(response.data.data);
         Cookies.set("token", response.data.token);
         localStorage.setItem("username:", response.data.username)

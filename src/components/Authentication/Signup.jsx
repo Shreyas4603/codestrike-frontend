@@ -13,6 +13,7 @@ import {
 import { Input } from "../ui/input";
 import { postData } from "../utils/fetch-api-data";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 function Signup() {
   const navigate = useNavigate();
@@ -40,9 +41,9 @@ function Signup() {
     };
 
     try {
-      const response = await postData("/users/register", data);
-      console.log(response.response);
-      if (response.response.status === 201) {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/register`, data);
+    //   console.log(response);
+      if (response.status === 201) {
         toast.success("Signed up successfully!");
         navigate("/");
       }
